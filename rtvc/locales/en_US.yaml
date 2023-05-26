@@ -1,2 +1,36 @@
-hello:
-  hello_user: "F"
+name: "English (US)"
+title: "Real-time Voice Conversion (FishAudio) (Version: {version})"
+
+theme:
+  name: "Theme"
+  auto: "System"
+  light: "Light"
+  dark: "Dark"
+
+i18n:
+  language: "Language"
+  restart_msg: "Configuration changed, do you want to restart the app to take effect?"
+
+backend:
+  name: "Backend"
+  test: "Test"
+
+audio_device:
+  name: "Audio Device (Please use same kind of device for input and output)"
+  input: "Input (Recording)"
+  output: "Output (Playback)"
+
+audio:
+  name: "Audio Settings"
+  db_threshold: "DB Threshold"
+  pitch_shift: "Pitch Shift"
+  sample_duration: "Sample Duration"
+  fade_duration: "Fade Duration"
+  extra_duration: "Extra Duration"
+  input_denoise: "Input Denoise"
+  output_denoise: "Output Denoise"
+
+action:
+  start: "Start Voice Conversion"
+  stop: "Stop Voice Conversion"
+  latency: "Latency: {latency:.2f} ms"

@@ -1,2 +1,36 @@
-hello:
-  hello_user: "F"
+name: "中文 (简体)"
+title: "实时语音转换 (FishAudio) (版本: {version})"
+
+theme:
+  name: "主题"
+  auto: "系统"
+  light: "亮色"
+  dark: "暗色"
+
+i18n:
+  language: "语言"
+  restart_msg: "配置已更改，是否要重新启动应用程序以使其生效?"
+
+backend:
+  name: "后端"
+  test: "测试"
+
+audio_device:
+  name: "音频设备（请对输入和输出使用同类设备）"
+  input: "输入（录音）"
+  output: "输出（播放）"
+
+audio:
+  name: "音频设置"
+  db_threshold: "分贝阈值"
+  pitch_shift: "音调偏移"
+  sample_duration: "样本时长"
+  fade_duration: "淡入淡出时长"
+  extra_duration: "额外时长"
+  input_denoise: "输入降噪"
+  output_denoise: "输出降噪"
+
+action:
+  start: "开始语音转换"
+  stop: "停止语音转换"
+  latency: "延迟: {latency:.2f} ms"

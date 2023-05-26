@@ -1,9 +1,8 @@
-import locale
 from pathlib import Path
 
 import yaml
 
-from .config import config
+from rtvc.config import config
 
 # Load i18n files from locales/ directory
 i18n_path = Path(__file__).parent / "locales"
@@ -15,7 +14,7 @@ for i18n_file in i18n_files:
         i18n_map[i18n_file.stem] = yaml.safe_load(f.read())
 
 
-def _t(key: str | list[str], locale: str | None = None, fallback: str = "zh-CN") -> str:
+def _t(key: str | list[str], locale: str | None = None, fallback: str = "en_US") -> str:
     if locale is None:
         locale = config.locale
 
@@ -23,7 +22,7 @@ def _t(key: str | list[str], locale: str | None = None, fallback: str = "zh-CN")
         key = key.split(".")
 
     try:
-        node = i18n_map
+        node = i18n_map[locale]
         for k in key:
             node = node[k]
     except KeyError:
@@ -32,7 +31,9 @@ def _t(key: str | list[str], locale: str | None = None, fallback: str = "zh-CN")
 
         return ".".join(key)
 
-    return node[locale]
+    return node
 
 
-__all__ = ["_t"]
+language_map = {k: v["name"] for k, v in i18n_map.items()}
+
+__all__ = ["_t", "language_map"]

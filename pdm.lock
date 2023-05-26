@@ -77,6 +77,11 @@ requires_python = ">=3.6"
 summary = "Composable style cycles"
 
 [[package]]
+name = "darkdetect"
+version = "0.7.1"
+summary = "Detect OS Dark Mode from Python"
+
+[[package]]
 name = "decorator"
 version = "5.1.1"
 requires_python = ">=3.5"
@@ -320,6 +325,15 @@ requires_python = ">=3.7"
 summary = "The sip module support for PyQt6"
 
 [[package]]
+name = "pyqtdarktheme"
+version = "2.1.0"
+requires_python = ">=3.7,<3.12"
+summary = "Flat dark theme for PySide and PyQt."
+dependencies = [
+    "darkdetect<0.8.0,>=0.7.1",
+]
+
+[[package]]
 name = "pysimplegui"
 version = "4.60.5"
 summary = "Python GUIs for Humans. Launched in 2018. It's 2022 & PySimpleGUI is an ACTIVE & supported project. Super-simple to create custom GUI's. 325+ Demo programs & Cookbook for rapid start. Extensive documentation. Main docs at www.PySimpleGUI.org. Fun & your success are the focus. Examples using Machine Learning (GUI, OpenCV Integration), Rainmeter Style Desktop Widgets, Matplotlib + Pyplot, PIL support, add GUI to command line scripts, PDF & Image Viewers. Great for beginners & advanced GUI programmers."
@@ -484,7 +498,7 @@ summary = "HTTP library with thread-safe connection pooling, file post, and more
 [metadata]
 lock_version = "4.2"
 groups = ["default", "dev"]
-content_hash = "sha256:699e86d93feb57393880c30c506b247fde5e1b2cc0737aba11026598ce8140dc"
+content_hash = "sha256:abd844294d4cf97bbba038aa458c4bba91502a2072474c6f2a3a739865f86b1a"
 
 [metadata.files]
 "appdirs 1.4.4" = [
@@ -736,6 +750,10 @@ content_hash = "sha256:699e86d93feb57393880c30c506b247fde5e1b2cc0737aba11026598c
 "cycler 0.11.0" = [
     {url = "https://files.pythonhosted.org/packages/34/45/a7caaacbfc2fa60bee42effc4bcc7d7c6dbe9c349500e04f65a861c15eb9/cycler-0.11.0.tar.gz", hash = "sha256:9c87405839a19696e837b3b818fed3f5f69f16f1eec1a1ad77e043dcea9c772f"},
     {url = "https://files.pythonhosted.org/packages/5c/f9/695d6bedebd747e5eb0fe8fad57b72fdf25411273a39791cde838d5a8f51/cycler-0.11.0-py3-none-any.whl", hash = "sha256:3a27e95f763a428a739d2add979fa7494c912a32c17c4c38c4d5f082cad165a3"},
+]
+"darkdetect 0.7.1" = [
+    {url = "https://files.pythonhosted.org/packages/48/2e/346667de53b48417e6237efd9d076d6530c413666fcbc381adbfeff21ce7/darkdetect-0.7.1.tar.gz", hash = "sha256:47be3cf5134432ddb616bbffc927237718407914993c82809983e7ccebf49013"},
+    {url = "https://files.pythonhosted.org/packages/63/bd/b31abc8fcaab163e0b9501020309dd9094b47d609035a23e6ec0a0a8ba10/darkdetect-0.7.1-py2.py3-none-any.whl", hash = "sha256:3efe69f8ecd5f1b7f4fbb0d1d93f656b0e493c45cc49222380ffe2a529cbc866"},
 ]
 "decorator 5.1.1" = [
     {url = "https://files.pythonhosted.org/packages/66/0c/8d907af351aa16b42caae42f9d6aa37b900c67308052d10fdce809f8d952/decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
@@ -1237,6 +1255,10 @@ content_hash = "sha256:699e86d93feb57393880c30c506b247fde5e1b2cc0737aba11026598c
     {url = "https://files.pythonhosted.org/packages/d9/27/896cd83d72d59916f7b4864da611912a1e94f2604c3ab2f183589c87f652/PyQt6_sip-13.5.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:ad802005e68bb9bb6f869b7f904c73d7c7793d11b83d317c33ff6b0c163d785f"},
     {url = "https://files.pythonhosted.org/packages/e1/ce/8e98a772c0f8a7f5242643adbb05beee2ed3fa6cb6839490891633d3a661/PyQt6_sip-13.5.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:f7b4e3cad598afd9b50a32732007184141b400769d425cae86f4e702cbc882b3"},
     {url = "https://files.pythonhosted.org/packages/e7/55/e24ef2f4e8e1fad736e4e31180d4ae5e9f978a60358b81fb2555304e4337/PyQt6_sip-13.5.1-cp310-cp310-win_amd64.whl", hash = "sha256:1e7bb3e45e57dfdb9437043d99b7cb797707e7f2475d122928b13688458f94b7"},
+]
+"pyqtdarktheme 2.1.0" = [
+    {url = "https://files.pythonhosted.org/packages/12/cd/8ce0ac84e9f68dc549edcc5cbdeac7511439c5f7ee6c05f1f8826ef05d44/pyqtdarktheme-2.1.0-py3-none-any.whl", hash = "sha256:8739d99502230fbaca42551ea033c9ae31c81c4ebfec2f1ffde38f32a18bea7a"},
+    {url = "https://files.pythonhosted.org/packages/5c/f1/786feaad7a333072b34a913dbe38aef94b5ae43ad188934f5d70007aea79/pyqtdarktheme-2.1.0.tar.gz", hash = "sha256:5f8274ddfa3a5481ed9743cdb0f9debfeb7ff695b3a0d202a8104361d17dadb8"},
 ]
 "pysimplegui 4.60.5" = [
     {url = "https://files.pythonhosted.org/packages/45/58/98c9e80860dfb0086289b318207d7c1c47afd60718065a7041381bb5af07/PySimpleGUI-4.60.5-py3-none-any.whl", hash = "sha256:004f33311ee685a5287fad54f500f7290b40d7c806044e478b1384f85dedce64"},

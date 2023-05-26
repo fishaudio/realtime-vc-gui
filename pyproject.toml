@@ -1,5 +1,5 @@
 [project]
-name = "realtime-vc-gui"
+name = "rtvc"
 version = "0.1.0"
 description = ""
 authors = [
@@ -12,8 +12,9 @@ dependencies = [
     "torchaudio>=2.0.2",
     "pyyaml>=6.0",
     "PyQt6>=6.5.0",
+    "pyqtdarktheme==2.1.0",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.12"
 readme = "README.md"
 license = {text = "MIT"}
 

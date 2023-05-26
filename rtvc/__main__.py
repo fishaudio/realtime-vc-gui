@@ -1,19 +1,26 @@
+import signal
 import sys
+
+import qdarktheme
 from PyQt6 import QtWidgets
-from .gui import MainWindow
+
+from rtvc.config import config
+from rtvc.gui import MainWindow
+
 
 def main():
-    # create the application and the main window
+    qdarktheme.enable_hi_dpi()
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
-
-    # setup stylesheet
-    # apply_stylesheet(app, theme='dark_teal.xml')
+    qdarktheme.setup_theme(config.theme)
 
     # run
     window.show()
     app.exec()
 
+
+# handle Ctrl+C
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 if __name__ == "__main__":
     main()

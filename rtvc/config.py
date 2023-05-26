@@ -23,7 +23,8 @@ class Config:
     input_denoise: bool = False
     output_denoise: bool = False
     sample_rate: int = 44100
-    sola_search_duration = 12
+    sola_search_duration: int = 12
+    buffer_num: int = 4
 
     @property
     def sample_frames(self):
@@ -50,7 +51,7 @@ def load_config():
     global config
 
     if config_path.exists():
-        with open(config_path, "r") as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             config = Config(**yaml.safe_load(f.read()))
 
     return config
@@ -60,7 +61,7 @@ def save_config():
     if not config_path.parent.exists():
         config_path.parent.mkdir(parents=True)
 
-    with open(config_path, "w") as f:
+    with open(config_path, "w", encoding="utf-8") as f:
         yaml.safe_dump(config.__dict__, f)
 
 

@@ -36,3 +36,4 @@ action:
   start: "Start Voice Conversion"
   stop: "Stop Voice Conversion"
   latency: "Latency: {latency:.2f} ms"
+  error: "Error"

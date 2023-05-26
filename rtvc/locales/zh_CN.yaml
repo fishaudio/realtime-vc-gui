@@ -36,3 +36,4 @@ action:
   start: "开始语音转换"
   stop: "停止语音转换"
   latency: "延迟: {latency:.2f} ms"
+  error: "错误"

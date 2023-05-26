@@ -10,7 +10,7 @@ i18n_files = list(i18n_path.glob("*.yaml"))
 
 i18n_map = {}
 for i18n_file in i18n_files:
-    with open(i18n_file, "r") as f:
+    with open(i18n_file, "r", encoding="utf-8") as f:
         i18n_map[i18n_file.stem] = yaml.safe_load(f.read())
 
 

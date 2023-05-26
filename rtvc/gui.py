@@ -1,4 +1,5 @@
 import os
+import queue
 import sys
 import threading
 import time
@@ -329,24 +330,36 @@ class MainWindow(QWidget):
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
 
-        # Init input wav
+        # Create windows and buffers
         self.input_wav = np.zeros(
-            config.extra_frames
-            + config.fade_frames
-            + config.sola_search_frames
-            + config.sample_frames,
+            (
+                config.sample_frames
+                + config.fade_frames
+                + config.sola_search_frames
+                + 2 * config.extra_frames,
+            ),
             dtype=np.float32,
         )
-
         self.sola_buffer = np.zeros(config.fade_frames)
+        self.fade_in_window = (
+            np.sin(np.pi * np.linspace(0, 0.5, config.fade_frames)) ** 2
+        )
+        self.fade_out_window = (
+            np.sin(np.pi * np.linspace(0.5, 1, config.fade_frames)) ** 2
+        )
 
         self.vc_status.set()
+        self.in_queue = queue.Queue()
+        self.out_queue = queue.Queue()
         self.vc_thread = threading.Thread(target=self.vc_worker)
+        self.bg_thread = threading.Thread(target=self.bg_worker)
         self.vc_thread.start()
+        self.bg_thread.start()
 
     def stop_conversion(self):
         self.vc_status.clear()
         self.vc_thread.join()
+        self.bg_thread.join()
 
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
@@ -363,32 +376,62 @@ class MainWindow(QWidget):
                 sd.sleep(config.sample_duration)
 
     def audio_callback(self, indata, outdata, frames, times, status):
-        if status:
-            print(status, file=sys.stderr)
+        # push to queue
+        self.in_queue.put((indata.copy(), outdata.shape[1], time.time()))
 
-        start_time = time.perf_counter()
+        try:
+            outdata[:] = self.out_queue.get_nowait()
+        except queue.Empty:
+            outdata[:] = 0
+
+    def bg_worker(self):
+        while self.vc_status.is_set():
+            indata, channels, in_time = self.in_queue.get()
+
+            try:
+                outdata = self.worker_step(indata)
+                self.latency_label.setText(
+                    _t("action.latency").format(latency=(time.time() - in_time) * 1000)
+                )
+            except:
+                import traceback
+
+                traceback.print_exc()
+
+                self.vc_status.clear()
+                self.latency_label.setText(_t("action.error"))
+                outdata = np.zeros((config.sample_frames,), dtype=np.float32)
+
+            self.out_queue.put(outdata.repeat(channels).reshape((-1, channels)))
+
+    def worker_step(self, indata):
         indata = librosa.to_mono(indata.T)
 
         if config.input_denoise:
             indata = nr.reduce_noise(y=indata, sr=config.sample_rate)
 
         # db threshold
-        frame_length = 2048
-        hop_length = 1024
+        if config.db_threshold != -60:
+            frame_length = 2048
+            hop_length = 1024
 
-        rms = librosa.feature.rms(
-            y=indata, frame_length=frame_length, hop_length=hop_length
+            rms = librosa.feature.rms(
+                y=indata, frame_length=frame_length, hop_length=hop_length
+            )
+            rms_db = librosa.amplitude_to_db(rms, ref=1.0)[0] < config.db_threshold
+
+            for i in range(len(rms_db)):
+                if rms_db[i]:
+                    indata[i * hop_length : (i + 1) * hop_length] = 0
+
+        # Rolling buffer
+        self.input_wav[:] = np.concatenate(
+            [
+                self.input_wav[config.sample_frames :],
+                indata,
+            ]
         )
-        rms_db = librosa.amplitude_to_db(rms, ref=1.0)[0] < config.db_threshold
 
-        for i in range(len(rms_db)):
-            if rms_db[i]:
-                indata[i * hop_length : (i + 1) * hop_length] = 0
-
-        self.input_wav[:] = np.append(self.input_wav[config.sample_frames :], indata)
-
-        print("input_wav:" + str(self.input_wav.shape))
-        # Virtual BytesIO
         buffer = BytesIO()
         sf.write(buffer, self.input_wav, config.sample_rate, format="wav")
         buffer.seek(0)
@@ -406,9 +449,7 @@ class MainWindow(QWidget):
             },
         )
 
-        if response.status_code != 200:
-            print("Error: " + str(response.status_code))
-            return
+        assert response.status_code == 200, f"Failed to request"
 
         buffer.close()
 
@@ -416,56 +457,48 @@ class MainWindow(QWidget):
             buffer.seek(0)
             infer_wav, _ = librosa.load(buffer, sr=config.sample_rate, mono=True)
 
-        print("infer_wav (raw):" + str(infer_wav.shape))
         infer_wav = infer_wav[
-            -config.fade_frames - config.sola_search_frames - config.sample_frames :
+            -config.sample_frames
+            - config.fade_frames
+            - config.sola_search_frames
+            - config.extra_frames : -config.extra_frames
         ]
-        print("infer_wav:" + str(infer_wav.shape))
+
+        # Sola alignment
+        sola_target = infer_wav[None, : config.sola_search_frames + config.fade_frames]
+        sola_kernel = np.flip(self.sola_buffer[None])
 
         cor_nom = convolve(
-            infer_wav[: config.sola_search_frames + config.fade_frames].reshape(1, -1),
-            self.sola_buffer.reshape(1, -1),
+            sola_target,
+            sola_kernel,
             mode="valid",
         )
         cor_den = np.sqrt(
             convolve(
-                np.square(
-                    infer_wav[: config.sola_search_frames + config.fade_frames].reshape(
-                        1, -1
-                    )
-                ),
+                np.square(sola_target),
                 np.ones((1, config.fade_frames)),
                 mode="valid",
             )
             + 1e-8
         )
         sola_offset = np.argmax(cor_nom[0] / cor_den[0])
-        print("sola offset: " + str(int(sola_offset)))
 
         output_wav = infer_wav[sola_offset : sola_offset + config.sample_frames]
-        output_wav[: config.fade_frames] *= np.linspace(0, 1, config.fade_frames)
-        # output_wav[: config.fade_frames] += self.sola_buffer
+        output_wav[: config.fade_frames] *= self.fade_in_window
+        output_wav[: config.fade_frames] += self.sola_buffer * self.fade_out_window
 
         if sola_offset < config.sola_search_frames:
-            self.sola_buffer[:] = infer_wav[
-                -config.sola_search_frames
-                - config.fade_frames
-                + sola_offset : -config.sola_search_frames
-                + sola_offset
-            ] * np.linspace(1, 0, config.fade_frames)
+            self.sola_buffer = infer_wav[
+                sola_offset
+                + config.sample_frames : sola_offset
+                + config.sample_frames
+                + config.fade_frames
+            ]
         else:
-            self.sola_buffer[:] = infer_wav[-config.fade_frames :] * np.linspace(
-                1, 0, config.fade_frames
-            )
+            self.sola_buffer = infer_wav[-config.fade_frames :]
 
         # Denoise
         if config.output_denoise:
             output_wav = nr.reduce_noise(y=output_wav, sr=config.sample_rate)
 
-        outdata[:] = output_wav.repeat(outdata.shape[1]).reshape(outdata.shape)
-
-        # Update UI
-        end_to_end = time.perf_counter() - start_time
-        self.latency_label.setText(
-            _t("action.latency").format(latency=end_to_end * 1000)
-        )
+        return output_wav

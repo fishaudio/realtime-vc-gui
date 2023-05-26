@@ -1,9 +1,4 @@
-import sys
-import time
-
 import sounddevice as sd
-
-from rtvc.config import config
 
 
 def get_devices(update: bool = True):

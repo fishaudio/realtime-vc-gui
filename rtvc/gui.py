@@ -12,7 +12,6 @@ import qdarktheme
 import requests
 import sounddevice as sd
 import soundfile as sf
-import torch
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QCheckBox,
@@ -423,7 +422,6 @@ class MainWindow(QWidget):
         ]
         print("infer_wav:" + str(infer_wav.shape))
 
-        sola_offset = torch.argmax(cor_nom[0, 0] / cor_den[0, 0])
         cor_nom = convolve(
             infer_wav[: config.sola_search_frames + config.fade_frames].reshape(1, -1),
             self.sola_buffer.reshape(1, -1),
@@ -446,7 +444,7 @@ class MainWindow(QWidget):
 
         output_wav = infer_wav[sola_offset : sola_offset + config.sample_frames]
         output_wav[: config.fade_frames] *= np.linspace(0, 1, config.fade_frames)
-        output_wav[: config.fade_frames] += self.sola_buffer
+        # output_wav[: config.fade_frames] += self.sola_buffer
 
         if sola_offset < config.sola_search_frames:
             self.sola_buffer[:] = infer_wav[

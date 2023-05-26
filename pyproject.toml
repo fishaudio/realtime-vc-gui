@@ -1,0 +1,17 @@
+[tool.pdm]
+
+[project]
+name = "realtime-vc-gui"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "lengyue", email = "lengyue@lengyue.me"},
+]
+dependencies = []
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"

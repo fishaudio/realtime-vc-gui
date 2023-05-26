@@ -1,8 +1,18 @@
 import os
 import sys
+import threading
+import time
+from io import BytesIO
 
+import librosa
+import noisereduce as nr
+import numpy as np
 import pkg_resources
 import qdarktheme
+import requests
+import sounddevice as sd
+import soundfile as sf
+import torch
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QCheckBox,
@@ -18,6 +28,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from scipy.signal import convolve
 
 from rtvc.audio import get_devices
 from rtvc.config import config, load_config, save_config
@@ -42,6 +53,10 @@ class MainWindow(QWidget):
         self.setup_action_buttons()
 
         self.setLayout(self.main_layout)
+
+        # Voice Conversion Thread
+        self.thread = None
+        self.vc_status = threading.Event()
 
     def setup_ui_settings(self):
         # we have language and backend settings in the first row
@@ -175,7 +190,7 @@ class MainWindow(QWidget):
         # sample_duration, fade_duration
         row_layout.addWidget(QLabel(_t("audio.sample_duration")), 1, 0)
         self.sample_duration_slider = QSlider(Qt.Orientation.Horizontal)
-        self.sample_duration_slider.setMinimum(1000)
+        self.sample_duration_slider.setMinimum(100)
         self.sample_duration_slider.setMaximum(3000)
         self.sample_duration_slider.setSingleStep(100)
         self.sample_duration_slider.setTickInterval(100)
@@ -240,12 +255,12 @@ class MainWindow(QWidget):
         row_layout.addStretch(1)
 
         self.start_button = QPushButton(_t("action.start"))
-        # self.start_button.clicked.connect(self.start_recording)
+        self.start_button.clicked.connect(self.start_conversion)
         row_layout.addWidget(self.start_button)
 
         self.stop_button = QPushButton(_t("action.stop"))
         self.stop_button.setEnabled(False)
-        # self.stop_button.clicked.connect(self.stop_recording)
+        self.stop_button.clicked.connect(self.stop_conversion)
         row_layout.addWidget(self.stop_button)
 
         self.latency_label = QLabel(_t("action.latency").format(latency=0))
@@ -278,4 +293,181 @@ class MainWindow(QWidget):
             os.execv(sys.argv[0], sys.argv)
 
     def test_backend(self):
-        pass
+        backend = self.backend_input.text()
+
+        try:
+            response = requests.options(backend, timeout=5)
+        except:
+            response = None
+
+        message_box = QMessageBox()
+
+        if response is not None and response.status_code == 200:
+            message_box.setIcon(QMessageBox.Icon.Information)
+            message_box.setText(_t("backend.test_succeed"))
+            config.backend = backend
+            save_config()
+        else:
+            message_box.setIcon(QMessageBox.Icon.Question)
+            message_box.setText(_t("backend.test_failed"))
+
+        message_box.exec()
+
+    def start_conversion(self):
+        config.backend = self.backend_input.text()
+        config.input_device = self.input_device_combo.currentData()
+        config.output_device = self.output_device_combo.currentData()
+        config.db_threshold = self.db_threshold_slider.value()
+        config.pitch_shift = self.pitch_shift_slider.value()
+        config.sample_duration = self.sample_duration_slider.value()
+        config.fade_duration = self.fade_duration_slider.value()
+        config.extra_duration = self.extra_duration_slider.value()
+        config.input_denoise = self.input_denoise_checkbox.isChecked()
+        config.output_denoise = self.output_denoise_checkbox.isChecked()
+
+        save_config()
+
+        self.start_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+
+        # Init input wav
+        self.input_wav = np.zeros(
+            config.extra_frames
+            + config.fade_frames
+            + config.sola_search_frames
+            + config.sample_frames,
+            dtype=np.float32,
+        )
+
+        self.sola_buffer = np.zeros(config.fade_frames)
+
+        self.vc_status.set()
+        self.vc_thread = threading.Thread(target=self.vc_worker)
+        self.vc_thread.start()
+
+    def stop_conversion(self):
+        self.vc_status.clear()
+        self.vc_thread.join()
+
+        self.start_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+
+    def vc_worker(self):
+        with sd.Stream(
+            callback=self.audio_callback,
+            blocksize=config.sample_frames,
+            samplerate=config.sample_rate,
+            dtype="float32",
+            device=(config.input_device, config.output_device),
+        ):
+            while self.vc_status.is_set():
+                sd.sleep(config.sample_duration)
+
+    def audio_callback(self, indata, outdata, frames, times, status):
+        if status:
+            print(status, file=sys.stderr)
+
+        start_time = time.perf_counter()
+        indata = librosa.to_mono(indata.T)
+
+        if config.input_denoise:
+            indata = nr.reduce_noise(y=indata, sr=config.sample_rate)
+
+        # db threshold
+        frame_length = 2048
+        hop_length = 1024
+
+        rms = librosa.feature.rms(
+            y=indata, frame_length=frame_length, hop_length=hop_length
+        )
+        rms_db = librosa.amplitude_to_db(rms, ref=1.0)[0] < config.db_threshold
+
+        for i in range(len(rms_db)):
+            if rms_db[i]:
+                indata[i * hop_length : (i + 1) * hop_length] = 0
+
+        self.input_wav[:] = np.append(self.input_wav[config.sample_frames :], indata)
+
+        print("input_wav:" + str(self.input_wav.shape))
+        # Virtual BytesIO
+        buffer = BytesIO()
+        sf.write(buffer, self.input_wav, config.sample_rate, format="wav")
+        buffer.seek(0)
+
+        response = requests.post(
+            config.backend,
+            files={
+                "sample": ("audio.wav", buffer, "audio/wav"),
+            },
+            data={
+                "fSafePrefixPadLength": "0",
+                "fPitchChange": str(config.pitch_shift),
+                "sSpeakId": "0",
+                "sampleRate": str(config.sample_rate),
+            },
+        )
+
+        if response.status_code != 200:
+            print("Error: " + str(response.status_code))
+            return
+
+        buffer.close()
+
+        with BytesIO(response.content) as buffer:
+            buffer.seek(0)
+            infer_wav, _ = librosa.load(buffer, sr=config.sample_rate, mono=True)
+
+        print("infer_wav (raw):" + str(infer_wav.shape))
+        infer_wav = infer_wav[
+            -config.fade_frames - config.sola_search_frames - config.sample_frames :
+        ]
+        print("infer_wav:" + str(infer_wav.shape))
+
+        sola_offset = torch.argmax(cor_nom[0, 0] / cor_den[0, 0])
+        cor_nom = convolve(
+            infer_wav[: config.sola_search_frames + config.fade_frames].reshape(1, -1),
+            self.sola_buffer.reshape(1, -1),
+            mode="valid",
+        )
+        cor_den = np.sqrt(
+            convolve(
+                np.square(
+                    infer_wav[: config.sola_search_frames + config.fade_frames].reshape(
+                        1, -1
+                    )
+                ),
+                np.ones((1, config.fade_frames)),
+                mode="valid",
+            )
+            + 1e-8
+        )
+        sola_offset = np.argmax(cor_nom[0] / cor_den[0])
+        print("sola offset: " + str(int(sola_offset)))
+
+        output_wav = infer_wav[sola_offset : sola_offset + config.sample_frames]
+        output_wav[: config.fade_frames] *= np.linspace(0, 1, config.fade_frames)
+        output_wav[: config.fade_frames] += self.sola_buffer
+
+        if sola_offset < config.sola_search_frames:
+            self.sola_buffer[:] = infer_wav[
+                -config.sola_search_frames
+                - config.fade_frames
+                + sola_offset : -config.sola_search_frames
+                + sola_offset
+            ] * np.linspace(1, 0, config.fade_frames)
+        else:
+            self.sola_buffer[:] = infer_wav[-config.fade_frames :] * np.linspace(
+                1, 0, config.fade_frames
+            )
+
+        # Denoise
+        if config.output_denoise:
+            output_wav = nr.reduce_noise(y=output_wav, sr=config.sample_rate)
+
+        outdata[:] = output_wav.repeat(outdata.shape[1]).reshape(outdata.shape)
+
+        # Update UI
+        end_to_end = time.perf_counter() - start_time
+        self.latency_label.setText(
+            _t("action.latency").format(latency=end_to_end * 1000)
+        )

@@ -10,7 +10,7 @@ import yaml
 class Config:
     theme: Literal["auto", "light", "dark"] = "auto"
     locale: str = locale.getdefaultlocale()[0]
-    backend: str = "http://localhost:8080/rtvc"
+    backend: str = "http://localhost:6844/voiceChangeModel"
 
     input_device: str | None = None
     output_device: str | None = None
@@ -22,6 +22,24 @@ class Config:
     extra_duration: int = 50
     input_denoise: bool = False
     output_denoise: bool = False
+    sample_rate: int = 44100
+    sola_search_duration = 12
+
+    @property
+    def sample_frames(self):
+        return self.sample_duration * self.sample_rate // 1000
+
+    @property
+    def fade_frames(self):
+        return self.fade_duration * self.sample_rate // 1000
+
+    @property
+    def extra_frames(self):
+        return self.extra_duration * self.sample_rate // 1000
+
+    @property
+    def sola_search_frames(self):
+        return self.sola_search_duration * self.sample_rate // 1000
 
 
 config_path = Path.home() / ".rtvc" / "config.yaml"

@@ -467,14 +467,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "torchaudio"
-version = "2.0.2"
-summary = "An audio package for PyTorch"
-dependencies = [
-    "torch==2.0.1",
-]
-
-[[package]]
 name = "tqdm"
 version = "4.65.0"
 requires_python = ">=3.7"
@@ -497,8 +489,9 @@ summary = "HTTP library with thread-safe connection pooling, file post, and more
 
 [metadata]
 lock_version = "4.2"
+cross_platform = true
 groups = ["default", "dev"]
-content_hash = "sha256:abd844294d4cf97bbba038aa458c4bba91502a2072474c6f2a3a739865f86b1a"
+content_hash = "sha256:bbf8500cd3b3b1a3d63fc6d2bb0a227a291eb4fc6a6b2f5f5592312aa66c0268"
 
 [metadata.files]
 "appdirs 1.4.4" = [
@@ -1448,28 +1441,6 @@ content_hash = "sha256:abd844294d4cf97bbba038aa458c4bba91502a2072474c6f2a3a73986
     {url = "https://files.pythonhosted.org/packages/c8/21/25020cfdd9f564a72f400ee491610e50cb212e8add8031abaa959af6451e/torch-2.0.1-cp311-cp311-manylinux1_x86_64.whl", hash = "sha256:e617b1d0abaf6ced02dbb9486803abfef0d581609b09641b34fa315c9c40766d"},
     {url = "https://files.pythonhosted.org/packages/d0/c8/f0dc8642e3ce0a3ae5f05e5149ab9df5375d569294f7be9a1ab1d95a1d76/torch-2.0.1-cp311-cp311-win_amd64.whl", hash = "sha256:dbd68cbd1cd9da32fe5d294dd3411509b3d841baecb780b38b3b7b06c7754434"},
     {url = "https://files.pythonhosted.org/packages/e5/9a/ce0fe125f226ffce8deba6a18bd8d0b9f589aa236780a83a6d70b5525f56/torch-2.0.1-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:e10e1597f2175365285db1b24019eb6f04d53dcd626c735fc502f1e8b6be9875"},
-]
-"torchaudio 2.0.2" = [
-    {url = "https://files.pythonhosted.org/packages/08/b6/f74ef8512d3c06ad544c72e773d2fcf02d2445b15b43ae7cc96ad88e8374/torchaudio-2.0.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:a8283dd61c579ea5b14d6773bbc0bf84573b12b37f05f02bb4b2425d77767284"},
-    {url = "https://files.pythonhosted.org/packages/18/34/3d47ad10261d643d84219ae0807df2661a647393e470550d3a8f0bcce24d/torchaudio-2.0.2-cp311-cp311-win_amd64.whl", hash = "sha256:2b37ed5ea4846ce334e7a4a93ca798683088b49e9a4943ed04f4fc4ba1ddc3c4"},
-    {url = "https://files.pythonhosted.org/packages/27/01/606db448fce62443e98f3d1eec1d3f916412dc9212f59faf34ae4558d565/torchaudio-2.0.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:1619673500fe08ae96b71952f03ecfc74e7d0843cd9882193d0642a82724f537"},
-    {url = "https://files.pythonhosted.org/packages/2c/54/655e23b424e1edecb414f9bce4f72545814eed00fe93c83fc51b2a8c49aa/torchaudio-2.0.2-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:a74f33da0b3c53b770f583a02cabd59196f089fb77a65eb39cd5d811b5a21d63"},
-    {url = "https://files.pythonhosted.org/packages/33/0e/91e7bb5edb58443f390b5333b529feac3464b32b077cf6b8b9f73f27cb3b/torchaudio-2.0.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:286061f9999905a6b96107c7ac751a4016985a8e2087250ab8328845e4128952"},
-    {url = "https://files.pythonhosted.org/packages/42/4e/21717ef4df24c904ad6d3b8ae1e920ed7a25bb8a637adfa3a25e31c0bc73/torchaudio-2.0.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:1138a1c39da2445a1caca20ddce1e77c9657e92263eb34376024f517f5284d4b"},
-    {url = "https://files.pythonhosted.org/packages/5b/58/a009263e2e7eaa2b53514f858359413e06c7dc0d08bcccb9415910e74db2/torchaudio-2.0.2-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:dadf237b4fd155a3d213bdfeffeded47f5a553d383817500438b44f24fa53851"},
-    {url = "https://files.pythonhosted.org/packages/61/53/a6e1cedca49a5e3638abc8cabfb4325cd9c07e593d2ae8b45b923cfe76b7/torchaudio-2.0.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:a6cba80d9ab3a2ec1317cdc5cbc0654a189a26e3d8b28ef9f83336159fd5e5e9"},
-    {url = "https://files.pythonhosted.org/packages/8b/0a/d8fee417e81137631612aaa899a267331cca2bff47fd724091549cd2ca0f/torchaudio-2.0.2-cp38-cp38-win_amd64.whl", hash = "sha256:ad43c0ffaa6771bfa05669bb1d8c3c179c859e92efd985683a78d6d313ecefb6"},
-    {url = "https://files.pythonhosted.org/packages/a6/4f/51b07324ae7e310877f1cf9ab6becaa18bbd3e0e909b8775325c02e19c67/torchaudio-2.0.2-cp310-cp310-manylinux1_x86_64.whl", hash = "sha256:4dbc7dd84be522f6d1159d33f5cf2fe08656ac5e8402ac2aa07cb626fed4b700"},
-    {url = "https://files.pythonhosted.org/packages/a6/e6/bb275216c328cf52c31b460f7a8f921302577011efba252dca841c04fb1f/torchaudio-2.0.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:15327132b28f34963baa6fe1813030a634d2581aa9ca120f730c1e8fabdc1102"},
-    {url = "https://files.pythonhosted.org/packages/a7/8e/b2b6f15a733632468e4abcb9682832bb5bdfb58c572f77e174c2492aacd7/torchaudio-2.0.2-cp310-cp310-win_amd64.whl", hash = "sha256:2f975083ba66f0837ea4b55fb8d81f31a63a4a27f8628e54c1e16ebda1842931"},
-    {url = "https://files.pythonhosted.org/packages/a8/9f/488745fdd9b6f25a888c60eeb544382376553b389b83f8f574ae0160c6df/torchaudio-2.0.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:28c9be830608f93c906770eb7b4880962f8fef9bd5275ac5b48c850f3cc4bc32"},
-    {url = "https://files.pythonhosted.org/packages/c1/90/a6256eb3aeab6676f79d3b20689e9e2ce3123b05e73f60ed71fe29fa2447/torchaudio-2.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:80c64dabb9d8c33bc6f2a8e0c7ebe17ea87f5028931c0d6a2f73b9e16b5272d0"},
-    {url = "https://files.pythonhosted.org/packages/c5/44/083a513d74017a68220d18b89904a93d4f545c3844ff9926a681c985828e/torchaudio-2.0.2-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:ee08ec303050405998e74a0a3649aee4d16408c2eb4bb1f8c7a726318b1ce1b7"},
-    {url = "https://files.pythonhosted.org/packages/d3/0f/59080659989bc9df844dc706d1f8369ba3e17e8f143cdeac9fed83481301/torchaudio-2.0.2-cp311-cp311-manylinux1_x86_64.whl", hash = "sha256:b44ec89d4274856f58d55bce4f90e4294ee26ec3020dc39b3081d541d7fd6184"},
-    {url = "https://files.pythonhosted.org/packages/dc/0f/e47b2dafdfcd0ec86109f118ebbcb32434396c22b141602d1f4e4f76c1f6/torchaudio-2.0.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:de5d94cb8305c00268dfbc576ca7e445f40891e024a9e5e28c63ad9f851e541a"},
-    {url = "https://files.pythonhosted.org/packages/dc/9c/4d2d65618034ed9833e8997c74b1bf77e3a73c4be0a2b2f80bd9f3c5988b/torchaudio-2.0.2-cp311-cp311-manylinux2014_aarch64.whl", hash = "sha256:b22aceaa1ec5a3310cc15642d19dd00d53a7ce399b9096ad1dea0b24e5097af3"},
-    {url = "https://files.pythonhosted.org/packages/eb/b0/b72708eca97014d756e4be2b92eca53e23a202028a24a5e0482adca8d6f7/torchaudio-2.0.2-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:6c617d5978a6b8a29d6675dcd18196e6dc541daac44b7b2b6eeb31aed82f3203"},
-    {url = "https://files.pythonhosted.org/packages/f9/36/583154f4594ff2d1178636ec4ae8a3a345032a31e9abdef6f13f5d234b67/torchaudio-2.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:66df470da29964d7c1e8106a42f5f5c9bc09e824083675ce3aba054d68b4af54"},
 ]
 "tqdm 4.65.0" = [
     {url = "https://files.pythonhosted.org/packages/3d/78/81191f56abb7d3d56963337dbdff6aa4f55805c8afd8bad64b0a34199e9b/tqdm-4.65.0.tar.gz", hash = "sha256:1871fb68a86b8fb3b59ca4cdd3dcccbc7e6d613eeed31f4c332531977b89beb5"},

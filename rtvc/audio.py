@@ -1,4 +1,9 @@
+import sys
+import time
+
 import sounddevice as sd
+
+from rtvc.config import config
 
 
 def get_devices(update: bool = True):
@@ -14,14 +19,14 @@ def get_devices(update: bool = True):
             devices[device_idx]["hostapi_name"] = hostapi["name"]
 
     input_devices = [
-        {"id": d["index"], "name": f"{d['name']} ({d['hostapi_name']})"}
-        for d in devices
+        {"id": idx, "name": f"{d['name']} ({d['hostapi_name']})"}
+        for idx, d in enumerate(devices)
         if d["max_input_channels"] > 0
     ]
 
     output_devices = [
-        {"id": d["index"], "name": f"{d['name']} ({d['hostapi_name']})"}
-        for d in devices
+        {"id": idx, "name": f"{d['name']} ({d['hostapi_name']})"}
+        for idx, d in enumerate(devices)
         if d["max_output_channels"] > 0
     ]
 

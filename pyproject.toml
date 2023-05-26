@@ -17,11 +17,11 @@ classifiers = [
 dependencies = [
     "noisereduce>=2.0.1",
     "sounddevice>=0.4.6",
-    "torch>=2.0.1",
-    "torchaudio>=2.0.2",
     "pyyaml>=6.0",
     "PyQt6>=6.5.0",
     "pyqtdarktheme==2.1.0",
+    "requests>=2.31.0",
+    "torch>=2.0.1",
 ]
 
 [project.urls]

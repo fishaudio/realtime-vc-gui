@@ -11,6 +11,7 @@ dependencies = [
     "torch>=2.0.1",
     "torchaudio>=2.0.2",
     "pyyaml>=6.0",
+    "PyQt6>=6.5.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -28,6 +29,7 @@ dev = [
     "isort>=5.12.0",
     "black>=23.3.0",
     "pytest>=7.3.1",
+    "PySimpleGUI>=4.60.5",
 ]
 
 [build-system]

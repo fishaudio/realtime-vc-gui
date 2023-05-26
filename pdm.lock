@@ -299,6 +299,32 @@ requires_python = ">=3.6.8"
 summary = "pyparsing module - Classes and methods to define and execute parsing grammars"
 
 [[package]]
+name = "pyqt6"
+version = "6.5.0"
+requires_python = ">=3.6.1"
+summary = "Python bindings for the Qt cross platform application toolkit"
+dependencies = [
+    "PyQt6-Qt6>=6.5.0",
+    "PyQt6-sip<14,>=13.4",
+]
+
+[[package]]
+name = "pyqt6-qt6"
+version = "6.5.1"
+summary = "The subset of a Qt installation needed by PyQt6."
+
+[[package]]
+name = "pyqt6-sip"
+version = "13.5.1"
+requires_python = ">=3.7"
+summary = "The sip module support for PyQt6"
+
+[[package]]
+name = "pysimplegui"
+version = "4.60.5"
+summary = "Python GUIs for Humans. Launched in 2018. It's 2022 & PySimpleGUI is an ACTIVE & supported project. Super-simple to create custom GUI's. 325+ Demo programs & Cookbook for rapid start. Extensive documentation. Main docs at www.PySimpleGUI.org. Fun & your success are the focus. Examples using Machine Learning (GUI, OpenCV Integration), Rainmeter Style Desktop Widgets, Matplotlib + Pyplot, PIL support, add GUI to command line scripts, PDF & Image Viewers. Great for beginners & advanced GUI programmers."
+
+[[package]]
 name = "pytest"
 version = "7.3.1"
 requires_python = ">=3.7"
@@ -458,7 +484,7 @@ summary = "HTTP library with thread-safe connection pooling, file post, and more
 [metadata]
 lock_version = "4.2"
 groups = ["default", "dev"]
-content_hash = "sha256:d609d02706eeef0d36bcdf9707e6bf751daf79edd70e9748cf36b3a96d011253"
+content_hash = "sha256:699e86d93feb57393880c30c506b247fde5e1b2cc0737aba11026598ce8140dc"
 
 [metadata.files]
 "appdirs 1.4.4" = [
@@ -1178,6 +1204,43 @@ content_hash = "sha256:d609d02706eeef0d36bcdf9707e6bf751daf79edd70e9748cf36b3a96
 "pyparsing 3.0.9" = [
     {url = "https://files.pythonhosted.org/packages/6c/10/a7d0fa5baea8fe7b50f448ab742f26f52b80bfca85ac2be9d35cdd9a3246/pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
     {url = "https://files.pythonhosted.org/packages/71/22/207523d16464c40a0310d2d4d8926daffa00ac1f5b1576170a32db749636/pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
+]
+"pyqt6 6.5.0" = [
+    {url = "https://files.pythonhosted.org/packages/28/01/9e4b91cb0c1023934b1dc654c5bbfc29cbabcbf6092f936b74aee46dd637/PyQt6-6.5.0.tar.gz", hash = "sha256:b97cb4be9b2c8997904ea668cf3b0a4ae5822196f7792590d05ecde6216a9fbc"},
+    {url = "https://files.pythonhosted.org/packages/2b/6d/6c04898c25cbab38af3d6be988bc8b12bba278117280194fc4abd23b8dad/PyQt6-6.5.0-cp37-abi3-win_amd64.whl", hash = "sha256:99ea0e68f548509b7ef97cded0feeaf3dca7d1fe719388569407326be3be38c2"},
+    {url = "https://files.pythonhosted.org/packages/35/d7/ce0c3dde77ccc6809da313ea908ebf84cd85f75796fb7a887eb2a24e230a/PyQt6-6.5.0-cp37-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:2b0d9628134811fbfc988d1757111ca8e25cb697f136fa54c969fb1a4d4a61d1"},
+    {url = "https://files.pythonhosted.org/packages/3b/b3/68fa3deb9d83f8e5ad880b09e85359a67d8b7975513fd2688ca295a86703/PyQt6-6.5.0-1-cp37-abi3-win_amd64.whl", hash = "sha256:952ba3b50c10f61289ea74db4c7a616170219959ac5300e0d9ec5427a27e95c7"},
+    {url = "https://files.pythonhosted.org/packages/51/09/2b430ba13e3ec2484a21a6c00af879768931e905d3d7cb1f4c9cb404f86f/PyQt6-6.5.0-1-cp37-abi3-macosx_10_14_universal2.whl", hash = "sha256:b3f2bf611e7f09c25f5decb82fc27bbe63fcc498e63bf11d17e23916d716c805"},
+    {url = "https://files.pythonhosted.org/packages/67/87/99b5b750f457063eb6941bf98cc5092cb0c3aad76e2f57884157a7a2a395/PyQt6-6.5.0-cp37-abi3-macosx_10_14_universal2.whl", hash = "sha256:e3c8289d9a509be897265981b77eb29e64ce29e9d221fdf52545c2c95e819c9b"},
+    {url = "https://files.pythonhosted.org/packages/ab/54/1f65554a0a8dfff8ad7aa7ad1ee4cccfad04a97f2260d6ae84f3703c26f1/PyQt6-6.5.0-1-cp37-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:6f3d232fe2abb02689d23a83f9629ccca6d57a36384688cd6411700ff5cf43f2"},
+]
+"pyqt6-qt6 6.5.1" = [
+    {url = "https://files.pythonhosted.org/packages/38/15/be92075c976820f029d4eb1cc0422a0e69d9932c5b41dcbca3d72fdbb75b/PyQt6_Qt6-6.5.1-py3-none-macosx_10_14_x86_64.whl", hash = "sha256:6aa88aaf4e4e9236364d5b4da8ffdf2854dc579966f135e85e34a54a91ec8096"},
+    {url = "https://files.pythonhosted.org/packages/7a/c3/cc5b5dd021c6e5d0a5cd4e66b190403b1259f872eb00d3eac7eacd994f56/PyQt6_Qt6-6.5.1-py3-none-win_amd64.whl", hash = "sha256:fc4de9c51bfa3e8eaef03ecd4e6346f42a3accf69555987d66dd1236f14e8225"},
+    {url = "https://files.pythonhosted.org/packages/c4/35/5a75e038f96afbf2310dc0574d52370ec7b4b269dedd48b99320dc890ce6/PyQt6_Qt6-6.5.1-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:7b04daf0e6ca1e79bf8d3e611392be06abc1687879e3475fcbad0d67672d3370"},
+    {url = "https://files.pythonhosted.org/packages/db/63/1a6ffdc84f98e37510171b9b6c2ce9be5006fbffaa5e077f028a5a1ad755/PyQt6_Qt6-6.5.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:dfc06f8da1728fa2ee2a9407d85704e2661415536190ec632dd8f657acc53842"},
+]
+"pyqt6-sip 13.5.1" = [
+    {url = "https://files.pythonhosted.org/packages/23/ab/e84aab154e01e57e73b7cb0b82a5b003e03d6e6f74bbfd42f3a89b3c6a0f/PyQt6_sip-13.5.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:d90dfec64c35c91644a3e32d3e5680cdee549d00245ea7252cb6298797f9bcef"},
+    {url = "https://files.pythonhosted.org/packages/24/49/e3fef041b08ab7dd44d9c295ce751c0b9e3bd080901b687b62bfe3ab54ee/PyQt6_sip-13.5.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:d79957dd0c0ea1a17f0846806ea203dce827df6a9dcd93ebfe98fdd6186d9ecc"},
+    {url = "https://files.pythonhosted.org/packages/2b/b4/87241bb21832cda1061805492ca2a5fd9d18969ea72277bb9fde94228962/PyQt6_sip-13.5.1.tar.gz", hash = "sha256:d1e9141752966669576d04b37ba0b122abbc41cc9c35493751028d7d91c4dd49"},
+    {url = "https://files.pythonhosted.org/packages/30/78/afd5477e7a9325b615b848aa0430c9c0577a90536d1607b2464da8603659/PyQt6_sip-13.5.1-cp38-cp38-win_amd64.whl", hash = "sha256:4b2e70d21069fe6e20bf22de1de2985e064e00d1368e0a171ce38824be4339ab"},
+    {url = "https://files.pythonhosted.org/packages/33/df/0cda93641d98217e97924b150882d4f53e25c285852fb5c9eb19031d9f47/PyQt6_sip-13.5.1-cp311-cp311-win_amd64.whl", hash = "sha256:08b69898aab0fcc73661b212d434f9e9eb50319481bc2ac3aaf1ac06bc9feca6"},
+    {url = "https://files.pythonhosted.org/packages/52/09/0c2fb07ad0f57b8141afd2ac054e897aa943557a0406cc7850b3314f66cb/PyQt6_sip-13.5.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:c71d303ff654ad947d8c0cb5ebfde9a59390aac52eb695a775234a08bee8f44e"},
+    {url = "https://files.pythonhosted.org/packages/52/3c/04174ef9fc35882f37184b7f68d69753bc35e9417998d70943dcbb221d87/PyQt6_sip-13.5.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:c3e2f155f92f96d73c680caf3d87f4f9f9aaf6487c125ecbe7140daad7d87245"},
+    {url = "https://files.pythonhosted.org/packages/62/96/5344bea39a925e5cd0f0c08536b41c1a065bd308f6d1ce326a535bd6851d/PyQt6_sip-13.5.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2a15f080a994936ed182f4a81343baa19bac9063ec6efc0a93d026f5cfc95ace"},
+    {url = "https://files.pythonhosted.org/packages/6d/e0/07cbdca2c80de19a0676f1c0999b6b82dcd3708b13a6a0a412f965e48e08/PyQt6_sip-13.5.1-cp37-cp37m-win_amd64.whl", hash = "sha256:52931307cf06c5ac992df2877e899f8b8ba72464e2828fe442b18fd51c7bf787"},
+    {url = "https://files.pythonhosted.org/packages/79/5f/959265a9116c4a6358806c772cee3d519fce8e84275d016f4c7ffc9ec180/PyQt6_sip-13.5.1-cp39-cp39-win_amd64.whl", hash = "sha256:5e8fdb0821c0c556d2a34db1229d4bd711499a1102241b1b9fcf1ee34f87e564"},
+    {url = "https://files.pythonhosted.org/packages/88/bc/2b301601c199f1a2bc3d6d519e57ce54066e8ccf55514eac3d0ae2abee18/PyQt6_sip-13.5.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:18c0e75e6ebd91dc96dbc6290f044ec37e764890ef2182c82b99ea5b655ea466"},
+    {url = "https://files.pythonhosted.org/packages/b9/63/0772c9f3301b321014ed44e0030313e4c7fa678b51bb311e914c3c7eab35/PyQt6_sip-13.5.1-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:a867601c38acc9b0c7f9aab4f96d9ec8cbedfcd5ae245f82a9c1c48f352413e4"},
+    {url = "https://files.pythonhosted.org/packages/d1/9a/e6841a9d166635cf4bb5fabab20af06b791424a7d3f890bcad89a9118844/PyQt6_sip-13.5.1-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:e0d715bb5b86eb8f09d84b2b4400df7e4c96ef730801bc145a1c23be79f39fac"},
+    {url = "https://files.pythonhosted.org/packages/d9/27/896cd83d72d59916f7b4864da611912a1e94f2604c3ab2f183589c87f652/PyQt6_sip-13.5.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:ad802005e68bb9bb6f869b7f904c73d7c7793d11b83d317c33ff6b0c163d785f"},
+    {url = "https://files.pythonhosted.org/packages/e1/ce/8e98a772c0f8a7f5242643adbb05beee2ed3fa6cb6839490891633d3a661/PyQt6_sip-13.5.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:f7b4e3cad598afd9b50a32732007184141b400769d425cae86f4e702cbc882b3"},
+    {url = "https://files.pythonhosted.org/packages/e7/55/e24ef2f4e8e1fad736e4e31180d4ae5e9f978a60358b81fb2555304e4337/PyQt6_sip-13.5.1-cp310-cp310-win_amd64.whl", hash = "sha256:1e7bb3e45e57dfdb9437043d99b7cb797707e7f2475d122928b13688458f94b7"},
+]
+"pysimplegui 4.60.5" = [
+    {url = "https://files.pythonhosted.org/packages/45/58/98c9e80860dfb0086289b318207d7c1c47afd60718065a7041381bb5af07/PySimpleGUI-4.60.5-py3-none-any.whl", hash = "sha256:004f33311ee685a5287fad54f500f7290b40d7c806044e478b1384f85dedce64"},
+    {url = "https://files.pythonhosted.org/packages/8f/21/afa5178096672ef7a36c6d98255e8c489313cd640679b9eefefde41a2986/PySimpleGUI-4.60.5.tar.gz", hash = "sha256:31014d1cc5eef1373d7e93564ff2604662645cc774a939b1f01aa253e7f9d78b"},
 ]
 "pytest 7.3.1" = [
     {url = "https://files.pythonhosted.org/packages/1b/d1/72df649a705af1e3a09ffe14b0c7d3be1fd730da6b98beb4a2ed26b8a023/pytest-7.3.1-py3-none-any.whl", hash = "sha256:3799fa815351fea3a5e96ac7e503a96fa51cc9942c3753cda7651b93c1cfa362"},

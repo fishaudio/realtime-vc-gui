@@ -10,17 +10,18 @@ dependencies = [
     "sounddevice>=0.4.6",
     "torch>=2.0.1",
     "torchaudio>=2.0.2",
+    "pyyaml>=6.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-rtvc = "rtvc_gui.__main__:main"
+rtvc = "rtvc.__main__:main"
 
 [tool.pdm]
 [tool.pdm.build]
-includes = ["rtvc_gui"]
+includes = ["rtvc"]
 
 [tool.pdm.dev-dependencies]
 dev = [

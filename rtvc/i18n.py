@@ -2,7 +2,7 @@ from pathlib import Path
 
 import yaml
 
-from rtvc.config import config, application_path
+from rtvc.config import application_path, config
 
 # Load i18n files from locales/ directory
 i18n_path = application_path / "locales"

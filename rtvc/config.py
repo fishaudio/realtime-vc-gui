@@ -1,18 +1,19 @@
 import locale
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
-import sys
+
 import yaml
 
-
-if getattr(sys, 'frozen', False):
+if getattr(sys, "frozen", False):
     # If the application is run as a bundle, the PyInstaller bootloader
-    # extends the sys module by a flag frozen=True and sets the app 
+    # extends the sys module by a flag frozen=True and sets the app
     # path into variable _MEIPASS'.
     application_path = Path(sys._MEIPASS)
 else:
     application_path = Path(__file__).parent
+
 
 @dataclass
 class Config:

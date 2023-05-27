@@ -33,7 +33,7 @@ from PyQt6.QtWidgets import (
 from scipy.signal import convolve
 
 from rtvc.audio import get_devices
-from rtvc.config import config, save_config, application_path
+from rtvc.config import application_path, config, save_config
 from rtvc.i18n import _t, language_map
 
 

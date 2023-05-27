@@ -35,4 +35,5 @@ jobs:
       - name: Install dependencies
         run: pdm sync
       - name: Publish
-        run: pdm publish
+        run: pdm publish -u __token__ -P ${{ secrets.PYPI_TOKEN }}
+

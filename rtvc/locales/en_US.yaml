@@ -37,3 +37,13 @@ action:
   stop: "Stop Voice Conversion"
   latency: "Latency: {latency:.2f} ms"
   error: "Error"
+
+plugins:
+  diffusion:
+    title: "Diffusion"
+    sample_method: 
+      label: "Sample Method"
+    sample_interval: 
+      label: "Sample Interval"
+    skip_steps: 
+      label: "Skip Steps"

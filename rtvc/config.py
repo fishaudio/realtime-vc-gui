@@ -1,6 +1,6 @@
 import locale
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
@@ -34,6 +34,9 @@ class Config:
     sample_rate: int = 44100
     sola_search_duration: int = 12
     buffer_num: int = 4
+
+    # Plugins
+    plugins: dict[str, dict] = field(default_factory=dict)
 
     @property
     def sample_frames(self):

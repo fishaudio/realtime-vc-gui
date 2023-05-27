@@ -35,6 +35,9 @@ from scipy.signal import convolve
 from rtvc.audio import get_devices
 from rtvc.config import application_path, config, save_config
 from rtvc.i18n import _t, language_map
+from rtvc.plugins.base import render_plugin
+from rtvc.plugins.diffusion import DiffusionPlugin
+from rtvc.plugins.rvc import RVCPlugin
 
 
 class MainWindow(QWidget):
@@ -55,6 +58,7 @@ class MainWindow(QWidget):
         self.setup_ui_settings()
         self.setup_device_settings()
         self.setup_audio_settings()
+        self.main_layout.addWidget(render_plugin(RVCPlugin))
         self.setup_action_buttons()
 
         self.setLayout(self.main_layout)

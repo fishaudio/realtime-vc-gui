@@ -33,7 +33,7 @@ from PyQt6.QtWidgets import (
 from scipy.signal import convolve
 
 from rtvc.audio import get_devices
-from rtvc.config import config, save_config
+from rtvc.config import config, save_config, application_path
 from rtvc.i18n import _t, language_map
 
 
@@ -41,7 +41,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowIcon(QIcon(str(Path(__file__).parent / "assets" / "icon.png")))
+        self.setWindowIcon(QIcon(str(application_path / "assets" / "icon.png")))
 
         self.setMinimumWidth(800)
 

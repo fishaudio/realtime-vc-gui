@@ -2,10 +2,10 @@ from pathlib import Path
 
 import yaml
 
-from rtvc.config import config
+from rtvc.config import config, application_path
 
 # Load i18n files from locales/ directory
-i18n_path = Path(__file__).parent / "locales"
+i18n_path = application_path / "locales"
 i18n_files = list(i18n_path.glob("*.yaml"))
 
 i18n_map = {}

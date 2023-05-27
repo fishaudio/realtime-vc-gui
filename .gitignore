@@ -160,3 +160,7 @@ cython_debug/
 #.idea/
 .pdm-python
 .DS_Store
+__main__.build
+*.build
+__main__
+Info.plist

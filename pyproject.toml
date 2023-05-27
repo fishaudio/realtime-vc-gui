@@ -41,6 +41,7 @@ dev = [
     "PySimpleGUI>=4.60.5",
     "torch>=2.0.1",
     "nuitka>=1.5.8",
+    "imageio>=2.29.0",
 ]
 
 [build-system]
@@ -49,6 +50,7 @@ build-backend = "pdm.backend"
 
 [tool.pdm.scripts]
 lint = { shell = "black . && isort ." }
+lint-check = { shell = "black --check . && isort --check ." }
 test = { shell = "PYTHONPATH=. pytest -n=auto -q tests" }
 docs = { shell = "sphinx-autobuild docs docs/_build/html" }
 

@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 from io import BytesIO
+from pathlib import Path
 
 import librosa
 import noisereduce as nr
@@ -14,6 +15,7 @@ import requests
 import sounddevice as sd
 import soundfile as sf
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -31,13 +33,16 @@ from PyQt6.QtWidgets import (
 from scipy.signal import convolve
 
 from rtvc.audio import get_devices
-from rtvc.config import config, load_config, save_config
+from rtvc.config import config, save_config
 from rtvc.i18n import _t, language_map
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.setWindowIcon(QIcon(str(Path(__file__).parent / "assets" / "icon.png")))
+
         self.setMinimumWidth(800)
 
         version = pkg_resources.get_distribution("rtvc").version

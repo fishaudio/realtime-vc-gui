@@ -112,6 +112,16 @@ requires_python = ">=3.5"
 summary = "Internationalized Domain Names in Applications (IDNA)"
 
 [[package]]
+name = "imageio"
+version = "2.29.0"
+requires_python = ">=3.7"
+summary = "Library for reading and writing a wide range of image, video, scientific, and volumetric data formats."
+dependencies = [
+    "numpy",
+    "pillow>=8.3.2",
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.0.0"
 requires_python = ">=3.7"
@@ -515,7 +525,7 @@ dependencies = [
 lock_version = "4.2"
 cross_platform = true
 groups = ["default", "dev", "nuitka"]
-content_hash = "sha256:46a79455271286ad764e5c918061ed0dec02df5e00f859658774a5943859f5b5"
+content_hash = "sha256:dff558b60f65af1d4c5cdb0b75d3716dfc567600c5e3d367668c3ff25d87b864"
 
 [metadata.files]
 "appdirs 1.4.4" = [
@@ -791,6 +801,10 @@ content_hash = "sha256:46a79455271286ad764e5c918061ed0dec02df5e00f859658774a5943
 "idna 3.4" = [
     {url = "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
     {url = "https://files.pythonhosted.org/packages/fc/34/3030de6f1370931b9dbb4dad48f6ab1015ab1d32447850b9fc94e60097be/idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
+]
+"imageio 2.29.0" = [
+    {url = "https://files.pythonhosted.org/packages/6b/d1/8f34d94f2d8cb39c525247975f97429bf8e426e16ae1a9a627caa8f2d65b/imageio-2.29.0.tar.gz", hash = "sha256:5aa207ab61aca233a7a312951ac603d618b78418eac749e3dc5035010531e25b"},
+    {url = "https://files.pythonhosted.org/packages/a9/37/c338ad2a5600d1f5189540c19e86ba209594aa0e9ad8bb68c6f588ec29d2/imageio-2.29.0-py3-none-any.whl", hash = "sha256:548e93628b4c05afb29a3a0470167ff790cc9af598b5b1bd5fbec485aaf78786"},
 ]
 "iniconfig 2.0.0" = [
     {url = "https://files.pythonhosted.org/packages/d7/4b/cbd8e699e64a6f16ca3a8220661b5f83792b3017d0f79807cb8708d33913/iniconfig-2.0.0.tar.gz", hash = "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3"},

@@ -68,6 +68,7 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
 
     get_value_funcs = {}
     key_mappping = {}
+    components = {}
 
     for key, value in fields.items():
         type = value.type.__name__
@@ -87,10 +88,12 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
             slider.setMaximum(value.type.max)
             slider.setSingleStep(value.type.step)
             slider.setTickInterval(value.type.step)
-            value_label = QLabel(f"{slider.value()}")
             slider.setValue(getattr(plugin_config, key))
-            slider.valueChanged.connect(lambda value: value_label.setText(str(value)))
-            get_value_funcs[key] = lambda: slider.value()
+            value_label = QLabel(f"{slider.value()}")
+            slider.valueChanged.connect(
+                lambda value, value_label=value_label: value_label.setText(str(value))
+            )
+            get_value_funcs[key] = lambda slider=slider: slider.value()
             row.addWidget(QLabel(_t(f"{_t_key}.{key}.label")))
             row.addWidget(slider)
             slider.setToolTip(_t(f"{_t_key}.{key}.tooltip"))
@@ -99,7 +102,7 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
         elif type == "Input":
             line_edit = QLineEdit()
             line_edit.setText(getattr(plugin_config, key))
-            get_value_funcs[key] = lambda: line_edit.text()
+            get_value_funcs[key] = lambda line_edit=line_edit: line_edit.text()
             row.addWidget(QLabel(_t(f"{_t_key}.{key}.label")))
             line_edit.setToolTip(_t(f"{_t_key}.{key}.tooltip"))
             row.addWidget(line_edit)
@@ -107,7 +110,7 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
         elif type == "Checkbox":
             checkbox = QCheckBox()
             checkbox.setChecked(getattr(plugin_config, key))
-            get_value_funcs[key] = lambda: checkbox.isChecked()
+            get_value_funcs[key] = lambda checkbox=checkbox: checkbox.isChecked()
             row.addWidget(QLabel(_t(f"{_t_key}.{key}.label")))
             checkbox.setToolTip(_t(f"{_t_key}.{key}.tooltip"))
             row.addWidget(checkbox)
@@ -119,7 +122,7 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
             for i, item in enumerate(value.type.options):
                 if item[1] == getattr(plugin_config, key):
                     dropdown.setCurrentIndex(i)
-            get_value_funcs[key] = lambda: dropdown.currentText()
+            get_value_funcs[key] = lambda dropdown=dropdown: dropdown.currentText()
             row.addWidget(QLabel(_t(f"{_t_key}.{key}.label")))
             dropdown.setToolTip(_t(f"{_t_key}.{key}.tooltip"))
             row.addWidget(dropdown)

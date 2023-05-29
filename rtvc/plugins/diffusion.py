@@ -13,6 +13,6 @@ class DiffusionPlugin(WithSpeaker):
             ("None", "none"),
             ("PLMS", "plms"),
         ]
-    ) = "none"
+    ) = "plms"
     sample_interval: slider(1, 100, 5) = 20
     skip_steps: slider(0, 1000, 10) = 0

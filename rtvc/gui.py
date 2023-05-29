@@ -1,3 +1,4 @@
+import json
 import os
 import queue
 import sys
@@ -19,6 +20,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QFileDialog,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
@@ -33,11 +35,10 @@ from PyQt6.QtWidgets import (
 from scipy.signal import convolve
 
 from rtvc.audio import get_devices
-from rtvc.config import application_path, config, save_config
+from rtvc.config import application_path, config, load_config, save_config
 from rtvc.i18n import _t, language_map
+from rtvc.plugins import ALL_PLUGINS
 from rtvc.plugins.base import render_plugin
-from rtvc.plugins.diffusion import DiffusionPlugin
-from rtvc.plugins.rvc import RVCPlugin
 
 
 class MainWindow(QWidget):
@@ -45,8 +46,6 @@ class MainWindow(QWidget):
         super().__init__()
 
         self.setWindowIcon(QIcon(str(application_path / "assets" / "icon.png")))
-
-        self.setMinimumWidth(800)
 
         version = pkg_resources.get_distribution("rtvc").version
         self.setWindowTitle(_t("title").format(version=version))
@@ -56,12 +55,17 @@ class MainWindow(QWidget):
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.setup_ui_settings()
+        self.setup_backend_settings()
         self.setup_device_settings()
         self.setup_audio_settings()
-        self.main_layout.addWidget(render_plugin(RVCPlugin))
+        self.plugin_layout = QGroupBox()
+        self.main_layout.addWidget(self.plugin_layout)
+        self.setup_plugin_settings()
         self.setup_action_buttons()
-
         self.setLayout(self.main_layout)
+
+        # Use size hint to set a reasonable size
+        self.setMinimumWidth(900)
 
         # Voice Conversion Thread
         self.thread = None
@@ -70,6 +74,7 @@ class MainWindow(QWidget):
     def setup_ui_settings(self):
         # we have language and backend settings in the first row
         row = QHBoxLayout()
+        row.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         # set up a theme combo box
         row.addWidget(QLabel(_t("theme.name")))
@@ -94,15 +99,33 @@ class MainWindow(QWidget):
         self.language_combo.setMinimumWidth(150)
         row.addWidget(self.language_combo)
 
-        # set up backend (url) input, and a test button
-        row.addWidget(QLabel(_t("backend.name")))
-        self.backend_input = QLineEdit()
-        self.backend_input.setText(config.backend)
-        row.addWidget(self.backend_input)
+        # setup plugin combo box
+        row.addWidget(QLabel(_t("plugins.name")))
+        self.plugin_combo = QComboBox()
+        self.plugin_combo.addItem(_t("plugins.none.name"), "none")
+        for plugin in ALL_PLUGINS:
+            self.plugin_combo.addItem(_t(f"plugins.{plugin.id}.name"), plugin.id)
 
-        self.test_button = QPushButton(_t("backend.test"))
-        self.test_button.clicked.connect(self.test_backend)
-        row.addWidget(self.test_button)
+        if config.current_plugin is not None:
+            self.plugin_combo.setCurrentText(
+                _t(f"plugins.{config.current_plugin}.name")
+            )
+        else:
+            self.plugin_combo.setCurrentText(_t("plugins.none.name"))
+
+        self.plugin_combo.currentIndexChanged.connect(self.change_plugin)
+        self.plugin_combo.setMinimumWidth(150)
+        row.addWidget(self.plugin_combo)
+
+        # save button
+        self.save_button = QPushButton(_t("config.save"))
+        self.save_button.clicked.connect(self.save_config)
+        row.addWidget(self.save_button)
+
+        # load button
+        self.load_button = QPushButton(_t("config.load"))
+        self.load_button.clicked.connect(self.load_config)
+        row.addWidget(self.load_button)
 
         self.main_layout.addLayout(row)
 
@@ -256,11 +279,64 @@ class MainWindow(QWidget):
         row.setLayout(row_layout)
         self.main_layout.addWidget(row)
 
+    def setup_backend_settings(self):
+        widget = QGroupBox()
+        widget.setTitle(_t("backend.title"))
+        row = QHBoxLayout()
+
+        # protocol
+        row.addWidget(QLabel(_t("backend.protocol_label")))
+        self.backend_protocol = QComboBox()
+        self.backend_protocol.setMinimumWidth(75)
+        self.backend_protocol.addItems(["v1"])
+        self.backend_protocol.setCurrentText("v1")
+        row.addWidget(self.backend_protocol)
+
+        # set up backend (url) input, and a test button
+        row.addWidget(QLabel(_t("backend.name")))
+        self.backend_input = QLineEdit()
+        self.backend_input.setText(config.backend)
+        row.addWidget(self.backend_input)
+
+        self.test_button = QPushButton(_t("backend.test"))
+        self.test_button.clicked.connect(self.test_backend)
+        row.addWidget(self.test_button)
+
+        widget.setLayout(row)
+        self.main_layout.addWidget(widget)
+
+    def setup_plugin_settings(self):
+        plugin_id = config.current_plugin
+
+        if plugin_id is None:
+            self.get_plugin_config = lambda: dict()
+            self.plugin_key_mapping = dict()
+            self.plugin_layout.hide()
+            return
+
+        self.plugin_layout.show()
+        self.plugin_layout.setTitle(_t(f"plugins.{plugin_id}.name"))
+
+        if self.plugin_layout.layout():
+            # remove the old layout
+            QWidget().setLayout(self.plugin_layout.layout())
+
+        # Find the plugin class from the config
+        for plugin_cls in ALL_PLUGINS:
+            if plugin_cls.id != plugin_id:
+                continue
+
+            layout, get_value_func, key_mappping = render_plugin(plugin_cls)
+            self.get_plugin_config = get_value_func
+            self.plugin_key_mapping = key_mappping
+            self.plugin_layout.setLayout(layout)
+
+        # resize the window to fit the new layout
+        self.resize(self.sizeHint())
+
     def setup_action_buttons(self):
         row = QWidget()
         row_layout = QHBoxLayout()
-        # row_layout.setAlignment(Qt.AlignmentFlag.Alig)
-        # stick to bottom
         row_layout.addStretch(1)
 
         self.start_button = QPushButton(_t("action.start"))
@@ -301,6 +377,13 @@ class MainWindow(QWidget):
         if ret == QMessageBox.StandardButton.Yes:
             os.execv(sys.argv[0], sys.argv)
 
+    def change_plugin(self, index):
+        config.current_plugin = self.plugin_combo.itemData(index)
+        if config.current_plugin == "none":
+            config.current_plugin = None
+
+        self.setup_plugin_settings()
+
     def test_backend(self):
         backend = self.backend_input.text()
 
@@ -322,7 +405,7 @@ class MainWindow(QWidget):
 
         message_box.exec()
 
-    def start_conversion(self):
+    def save_config(self):
         config.backend = self.backend_input.text()
         config.input_device = self.input_device_combo.currentData()
         config.output_device = self.output_device_combo.currentData()
@@ -333,7 +416,54 @@ class MainWindow(QWidget):
         config.extra_duration = self.extra_duration_slider.value()
         config.input_denoise = self.input_denoise_checkbox.isChecked()
         config.output_denoise = self.output_denoise_checkbox.isChecked()
+        config.plugins[config.current_plugin] = self.get_plugin_config()
 
+        save_config()
+
+        # pop up a message box to tell user if they want to save the config to a file
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Icon.Question)
+        msg_box.setText(_t("config.save_msg"))
+        msg_box.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        msg_box.setDefaultButton(QMessageBox.StandardButton.No)
+
+        ret = msg_box.exec()
+        if ret == QMessageBox.StandardButton.No:
+            return
+
+        file_name, _ = QFileDialog.getSaveFileName(
+            self, _t("config.save_title"), "", "YAML (*.yaml)"
+        )
+
+        if not file_name:
+            return
+
+        save_config(file_name)
+
+    def load_config(self):
+        # pop up a message box to select a config file
+        file_name, _ = QFileDialog.getOpenFileName(
+            self, _t("config.load_title"), "", "YAML (*.yaml)"
+        )
+
+        if not file_name:
+            return
+
+        load_config(file_name)
+        save_config()
+
+        # pop up a message box to tell user app will restart
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Icon.Information)
+        msg_box.setText(_t("config.load_msg"))
+        msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg_box.exec()
+
+        os.execv(sys.argv[0], sys.argv)
+
+    def start_conversion(self):
         save_config()
 
         self.start_button.setEnabled(False)
@@ -445,17 +575,29 @@ class MainWindow(QWidget):
         sf.write(buffer, self.input_wav, config.sample_rate, format="wav")
         buffer.seek(0)
 
+        data = {
+            "fSafePrefixPadLength": "0",
+            "fPitchChange": str(config.pitch_shift),
+            "sampleRate": str(config.sample_rate),
+        }
+
+        # Override plugin settings, and apply key mapping
+        if (
+            config.current_plugin is not None
+            and config.current_plugin in config.plugins
+        ):
+            for k, v in config.plugins[config.current_plugin].items():
+                if k in self.plugin_key_mapping:
+                    k = self.plugin_key_mapping[k]
+
+                data[k] = str(v)
+
         response = requests.post(
             config.backend,
             files={
                 "sample": ("audio.wav", buffer, "audio/wav"),
             },
-            data={
-                "fSafePrefixPadLength": "0",
-                "fPitchChange": str(config.pitch_shift),
-                "sSpeakId": "0",
-                "sampleRate": str(config.sample_rate),
-            },
+            data=data,
         )
 
         assert response.status_code == 200, f"Failed to request"

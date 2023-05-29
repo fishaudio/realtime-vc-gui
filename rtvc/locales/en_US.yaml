@@ -1,6 +1,7 @@
 name: "English (US)"
 title: "Real-time Voice Conversion (FishAudio) (Version: {version})"
 
+
 theme:
   name: "Theme"
   auto: "System"
@@ -12,6 +13,8 @@ i18n:
   restart_msg: "Configuration changed, do you want to restart the app to take effect?"
 
 backend:
+  title: "Backend Settings"
+  protocol_label: "Protocol"
   name: "Backend"
   test: "Test"
   test_succeed: "Successfully connected to backend."
@@ -27,7 +30,7 @@ audio:
   db_threshold: "DB Threshold"
   pitch_shift: "Pitch Shift"
   sample_duration: "Sample Duration"
-  fade_duration: "Fade Duration"
+  fade_duration: "Fade in and out duration"
   extra_duration: "Extra Duration"
   input_denoise: "Input Denoise"
   output_denoise: "Output Denoise"
@@ -36,4 +39,45 @@ action:
   start: "Start Voice Conversion"
   stop: "Stop Voice Conversion"
   latency: "Latency: {latency:.2f} ms"
-  error: "Error"
+  error: "An error occurred, please restart the conversion"
+
+config:
+  save: "Save Config"
+  load: "Load Config"
+  save_msg: "Configuration saved, do you want to export to a file?"
+  save_title: "Export Configuration to YAML File"
+  load_msg: "Import completed, the program will restart to take effect."
+  load_title: "Import Configuration from YAML File"
+  error: "Unable to parse configuration file, reset"
+
+plugins:
+  name: "Plugin"
+  none:
+    name: "None"
+  diffusion:
+    name: "Diffusion Model"
+    speaker:
+      label: "Speaker"
+      tooltip: "Speaker ID, e.g., 0, 1, 2"
+    sample_method: 
+      label: "Sampling Algorithm"
+      tooltip: "none for no sampling, PLMS for fast sampling"
+    sample_interval: 
+      label: "Sampling Interval"
+      tooltip: "How many steps to take a sample, the larger the number, the faster the speed, but the lower the quality"
+    skip_steps: 
+      label: "Skip Steps"
+      tooltip: "Shallow diffusion related configuration, skip steps like 970 to eliminate electronic sound only, without affecting the effect"
+  hifisinger:
+    name: "HiFiSinger"
+    speaker:
+      label: "Speaker"
+      tooltip: "Speaker ID, e.g., 0, 1, 2"
+  rvc:
+    name: "RVC"
+    speaker:
+      label: "Speaker"
+      tooltip: "Speaker ID, e.g., 0, 1, 2"
+    index_ratio:
+      label: "Index Ratio"
+      tooltip: "TODO: Supplement Information"

@@ -1,6 +1,6 @@
 import locale
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
@@ -35,6 +35,10 @@ class Config:
     sola_search_duration: int = 12
     buffer_num: int = 4
 
+    # Plugins
+    current_plugin: str | None = None
+    plugins: dict[str, dict] = field(default_factory=dict)
+
     @property
     def sample_frames(self):
         return self.sample_duration * self.sample_rate // 1000
@@ -52,25 +56,33 @@ class Config:
         return self.sola_search_duration * self.sample_rate // 1000
 
 
-config_path = Path.home() / ".rtvc" / "config.yaml"
+default_config_path = str((Path.home() / ".rtvc" / "config.yaml").absolute())
 config = Config()
 
 
-def load_config():
+def load_config(path: Path | str = default_config_path) -> Config:
     global config
 
-    if config_path.exists():
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = Config(**yaml.safe_load(f.read()))
+    path = Path(path)
+
+    if path.exists():
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                config = Config(**yaml.safe_load(f.read()))
+        except Exception:
+            config = Config()
+            print("Failed to load config file, use default config instead.")
 
     return config
 
 
-def save_config():
-    if not config_path.parent.exists():
-        config_path.parent.mkdir(parents=True)
+def save_config(path: Path | str = default_config_path) -> None:
+    path = Path(path)
 
-    with open(config_path, "w", encoding="utf-8") as f:
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+
+    with open(path, "w", encoding="utf-8") as f:
         yaml.safe_dump(config.__dict__, f)
 
 

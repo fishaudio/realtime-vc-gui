@@ -576,7 +576,9 @@ class MainWindow(QWidget):
         buffer.seek(0)
 
         data = {
-            "fSafePrefixPadLength": str((config.extra_frames - config.fade_frames) / config.sample_rate - 0.03),
+            "fSafePrefixPadLength": str(
+                (config.extra_frames - config.fade_frames) / config.sample_rate - 0.03
+            ),
             "fPitchChange": str(config.pitch_shift),
             "sampleRate": str(config.sample_rate),
         }

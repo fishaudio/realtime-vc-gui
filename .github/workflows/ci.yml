@@ -23,12 +23,14 @@ jobs:
         run: pdm run lint-check
 
   build:
+    needs: lint
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10"]
+        package-type: ["onefile", "onedir"]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -38,11 +40,13 @@ jobs:
       - name: Install dependencies
         run: pdm sync
       - name: Build pyinstaller package
-        run: pdm run package
+        env:
+          PACKAGE_TYPE: ${{ matrix.package-type }}
+        run: pdm run build.py
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rtvc-${{ matrix.os }}-${{ matrix.python-version }}
+          name: rtvc-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.package-type }}
           path: dist
 
   publish:

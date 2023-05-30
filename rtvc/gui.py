@@ -1,11 +1,9 @@
-import json
 import os
 import queue
 import sys
 import threading
 import time
 from io import BytesIO
-from pathlib import Path
 
 import librosa
 import noisereduce as nr
@@ -48,6 +46,8 @@ class MainWindow(QWidget):
         self.setWindowIcon(QIcon(str(application_path / "assets" / "icon.png")))
 
         version = pkg_resources.get_distribution("rtvc").version
+        # remove +editable if it exists
+        version = version.split("+")[0]
         self.setWindowTitle(_t("title").format(version=version))
 
         self.main_layout = QVBoxLayout()

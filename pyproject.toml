@@ -52,7 +52,6 @@ lint = { shell = "black . && isort ." }
 lint-check = { shell = "black --check . && isort --check ." }
 test = { shell = "PYTHONPATH=. pytest -n=auto -q tests" }
 docs = { shell = "sphinx-autobuild docs docs/_build/html" }
-package = { shell = "pyinstaller rtvc/__main__.py --onedir -n rtvc --additional-hooks=extra-hooks --noconfirm --add-data 'rtvc/assets:assets' --add-data 'rtvc/locales:locales'" }
 
 [[tool.pdm.source]]
 type = "find_links"

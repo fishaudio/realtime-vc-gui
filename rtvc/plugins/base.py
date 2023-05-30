@@ -68,7 +68,6 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
 
     get_value_funcs = {}
     key_mappping = {}
-    components = {}
 
     for key, value in fields.items():
         type = value.type.__name__

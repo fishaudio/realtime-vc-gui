@@ -1,12 +1,12 @@
 name: CI
 
-on: 
+on:
   push:
-    branches: [ main ]
+    branches: [main]
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
@@ -22,6 +22,29 @@ jobs:
       - name: Lint with black and isort
         run: pdm run lint-check
 
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: [3.10]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: pdm-project/setup-pdm@v3
+      - name: Install dependencies
+        run: pdm sync
+      - name: Build pyinstaller package
+        run: pdm run package
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rtvc-${{ matrix.os }}-${{ matrix.python-version }}
+          path: dist
+
   publish:
     needs: lint
     runs-on: ubuntu-latest
@@ -36,4 +59,3 @@ jobs:
         run: pdm sync
       - name: Publish
         run: pdm publish -u __token__ -P ${{ secrets.PYPI_TOKEN }}
-

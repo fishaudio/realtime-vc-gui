@@ -405,7 +405,7 @@ class MainWindow(QWidget):
 
         message_box.exec()
 
-    def save_config(self):
+    def save_config(self, save_to_file=True):
         config.backend = self.backend_input.text()
         config.input_device = self.input_device_combo.currentData()
         config.output_device = self.output_device_combo.currentData()
@@ -421,6 +421,9 @@ class MainWindow(QWidget):
         save_config()
 
         # pop up a message box to tell user if they want to save the config to a file
+        if not save_to_file:
+            return
+
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Icon.Question)
         msg_box.setText(_t("config.save_msg"))
@@ -464,7 +467,7 @@ class MainWindow(QWidget):
         os.execv(sys.argv[0], sys.argv)
 
     def start_conversion(self):
-        save_config()
+        self.save_config(save_to_file=False)
 
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
@@ -575,10 +578,13 @@ class MainWindow(QWidget):
         sf.write(buffer, self.input_wav, config.sample_rate, format="wav")
         buffer.seek(0)
 
+        safe_pad_length = (
+            config.extra_frames - config.fade_frames
+        ) / config.sample_rate - 0.03
+        safe_pad_length = max(0, safe_pad_length)
+
         data = {
-            "fSafePrefixPadLength": str(
-                (config.extra_frames - config.fade_frames) / config.sample_rate - 0.03
-            ),
+            "fSafePrefixPadLength": str(safe_pad_length),
             "fPitchChange": str(config.pitch_shift),
             "sampleRate": str(config.sample_rate),
         }

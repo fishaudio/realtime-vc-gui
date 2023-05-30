@@ -75,7 +75,7 @@ def render_plugin(plugin_cls: dataclass) -> QGroupBox:
         if type not in ["Slider", "Input", "Checkbox", "Dropdown"]:
             continue
 
-        if hasattr(value.type, "map_key"):
+        if hasattr(value.type, "map_key") and value.type.map_key is not None:
             key_mappping[key] = value.type.map_key
 
         row = QHBoxLayout()

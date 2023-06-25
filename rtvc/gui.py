@@ -94,7 +94,7 @@ class MainWindow(QWidget):
         for k, v in language_map.items():
             self.language_combo.addItem(v, k)
 
-        self.language_combo.setCurrentText(language_map[config.locale])
+        self.language_combo.setCurrentText(language_map.get(config.locale, 'en_US'))
         self.language_combo.currentIndexChanged.connect(self.change_language)
         self.language_combo.setMinimumWidth(150)
         row.addWidget(self.language_combo)
